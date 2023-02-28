@@ -599,9 +599,9 @@ function fillStats(planet){
         }
     }
 
-    document.getElementById('tempMax').innerHTML = tempMax.toFixed(2);;
-    document.getElementById(('tempAvg')).innerHTML = tempAvg.toFixed(2);;
-    document.getElementById(('tempMin')).innerHTML = tempMin.toFixed(2);;
+    document.getElementById('tempMax').innerHTML = tempMax?.toFixed(2);;
+    document.getElementById(('tempAvg')).innerHTML = tempAvg?.toFixed(2);;
+    document.getElementById(('tempMin')).innerHTML = tempMin?.toFixed(2);;
     document.getElementById(('robotNumb')).innerHTML = robotNumb;
 }
 
