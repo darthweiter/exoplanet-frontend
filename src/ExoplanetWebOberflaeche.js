@@ -538,10 +538,10 @@ async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, te
     let planeten1 = await apiRequestPlaneten();
     let planet1 = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
     if (JSON.stringify(planeten1) !== JSON.stringify(planeten)) {
-        planeten = planeten1;
+        planeten = structuredClone(planeten1);
     }
     if (JSON.stringify(planet1) !== JSON.stringify(planet)) {
-        planet = planet1;
+        planet = structuredClone(planet1);
         planetHeight = planet.planet.height;
         planetWidth = planet.planet.width;
 
