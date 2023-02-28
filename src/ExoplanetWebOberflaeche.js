@@ -135,14 +135,13 @@ async function main() {
     // const orbit = new OrbitControls(camera, renderer.domElement);
     // orbit.update();
 
+    // call api every 5 second to get an update
+    setInterval(async function() {await checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi); }, 5000);
+
     // Render PlanetMap etc..
     async function animate() {
         //Spiel Rendern
         renderer.render(scene, camera);
-
-        // call api every frame to get an update
-        await checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi)
-
     }
 
 
