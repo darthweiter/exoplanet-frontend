@@ -335,13 +335,15 @@ function fillStats(planet, twoD){
     }else{
         document.getElementById(('tempAvg')).innerHTML = 0;
     }
-
     if(tempMin){
         document.getElementById(('tempMin')).innerHTML = tempMin.toFixed(2);
     }else{
         document.getElementById(('tempMin')).innerHTML = 0;
     }
     document.getElementById(('robotNumb')).innerHTML = robotNumb;
+
+    document.getElementById(('fields')).innerHTML = planet.planet.height * planet.planet.width;
+    document.getElementById(('fieldScan')).innerHTML = planet.planetFields.length;
 }
 
 

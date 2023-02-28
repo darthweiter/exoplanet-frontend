@@ -42,7 +42,7 @@ body{
     position: absolute;
     background-color: rgba(0,0,0,0.5);
     width: 10%;
-    height: 17%;
+    height: 20%;
     color: #fefefe;
     margin-top: 30px;
     margin-left: 40px;
@@ -90,6 +90,15 @@ body{
 
 .robotNumb{
     margin-left: 5px;
+}
+
+.fields{
+    margin-left: 5px;
+    margin-right: 2px;
+}
+
+.fieldScan{
+    margin-left: 2px;
 }
 
 .robotStatsBox{
