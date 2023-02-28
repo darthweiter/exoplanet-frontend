@@ -93,12 +93,12 @@ body{
 }
 
 .fields{
-    margin-left: 5px;
-    margin-right: 2px;
+    margin-left: 2px;
 }
 
 .fieldScan{
-    margin-left: 2px;
+    margin-left: 5px;
+    margin-right: 2px;
 }
 
 .robotStatsBox{
