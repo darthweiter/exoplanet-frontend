@@ -1,0 +1,195 @@
+body{
+    margin:0;
+    padding:0;
+    overflow:hidden
+}
+
+.startMenu{
+    display: flex;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: darkslategrey;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.startButton{
+    border-width: 3px;
+    border-color: #fefefe;
+    border-style: solid;
+    font-size: 45px;
+    height: 75px;
+    width: 150px;
+    color: #fefefe;
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+    text-shadow: 0 0 0 transparent;
+}
+
+.startButton:active{
+    border-color: black;
+    background-color: black;
+}
+.startButton:hover{
+    color: burlywood;
+}
+
+.statsBox{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: rgba(0,0,0,0.5);
+    width: 10%;
+    height: 17%;
+    color: #fefefe;
+    margin-top: 30px;
+    margin-left: 40px;
+    visibility: hidden;
+}
+
+.statsText{
+    font-size: 20px;
+    margin: 5px;
+}
+
+.tempText{
+    font-size: 15px;
+    margin: 10px 5px 0 5px;
+}
+.tempMaxText{
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    margin: 10px 5px 0 5px;
+}
+.tempMinText{
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    margin: 10px 5px 0 5px;
+}
+.tempAvgText{
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    margin: 10px 5px 10px 5px;
+}
+
+.temp{
+    margin-left: 5px;
+}
+
+.robotNumbText{
+    display: flex;
+    flex-direction: row;
+    font-size: 15px;
+    margin: 0 5px 5px 5px;
+}
+
+.robotNumb{
+    margin-left: 5px;
+}
+
+.robotStatsBox{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 100px;
+    background-color: rgba(0,0,0,0.5);
+    width: 10%;
+    height: 18%;
+    color: #fefefe;
+    top: 30px;
+    margin-left: 40px;
+    visibility: visible;
+    text-transform: uppercase;
+}
+
+.robotName{
+    font-size: 20px;
+    margin: 5px;
+}
+
+.coordinates{
+    display: flex;
+    flex-direction: row;
+    font-size: 15px;
+    margin: 5px;
+}
+
+.coordinateX{
+    margin-left: 5px;
+}
+
+.robotText{
+    font-size: 15px;
+    margin: 5px;
+}
+
+.crashedOnField{
+    font-size: 20px;
+    position: absolute;
+    color: #fefefe;
+    top: 85%;
+    right: 1%;
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+    border: 0 solid transparent;
+    text-shadow: 0 0 0 transparent;
+}
+
+
+.planetName{
+    position: absolute;
+    width: 100%;
+    color: slateblue;
+    margin-top: 30px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 50px;
+    visibility: hidden;
+}
+
+.triangleRight{
+    position: absolute;
+    font-size: 40px;
+    color: #fefefe;
+    top: 50%;
+    right: 2.5%;
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+    border: 0 solid transparent;
+    text-shadow: 0 0 0 transparent;
+    visibility: hidden;
+}
+
+.triangleLeft{
+    position: absolute;
+    font-size: 40px;
+    color: #fefefe;
+    top: 50%;
+    left: 2.5%;
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+    border: 0 solid transparent;
+    text-shadow: 0 0 0 transparent;
+    visibility: hidden;
+}
+
+.triangleRight:hover{
+    color: burlywood;
+}
+
+.triangleLeft:hover{
+    color: burlywood;
+}
+
+.triangleRight:active{
+    color: black;
+}
+
+.triangleLeft:active{
+    color: black;
+}

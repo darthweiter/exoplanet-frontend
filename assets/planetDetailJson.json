@@ -1,0 +1,28 @@
+{  "planet" : {
+    "id" : 1,
+    "name": "exoplanet1",
+    "width": 25,
+    "height": 25
+  },
+  "planetFields": [
+    {
+      "x": 0,
+      "y": 0,
+      "ground": "sand",
+      "temperature": 21,
+      "roboter": [
+        {
+          "id": 1,
+          "pid": 1,
+          "x": 3,
+          "y": 10,
+          "name": "roboter1",
+          "temperature": 10,
+          "energy": 100,
+          "direction": "north",
+          "status": "gut"
+        }
+      ]
+    }
+  ]
+}
