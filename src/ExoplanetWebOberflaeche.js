@@ -8,241 +8,7 @@ import {publishReplay} from "rxjs";
 
 let camera, renderer, scene, jsonFile, mesh, data, databool = false;
 let stats = document.getElementsByClassName('statsBox');
-let Json = {  "planet" : {
-        "id" : 1,
-        "name": "exoplanet1",
-        "width": 5,
-        "height": 5
-    },
-    "planetFields": [
-        {
-            "x": 0,
-            "y": 0,
-            "ground": "",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 1,
-            "y": 0,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": [],
-        },
-        {
-            "x": 2,
-            "y": 0,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": [
-                {
-                    "id": 2,
-                    "pid": 2,
-                    "x": 2,
-                    "y": 0,
-                    "name": "Luca",
-                    "temperature": 36,
-                    "energy": 100,
-                    "direction": "west",
-                    "status": "very good"
-                }
-            ]
-        },
-        {
-            "x": 3,
-            "y": 0,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": [],
-        },
-        {
-            "x": 4,
-            "y": 0,
-            "ground": "",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 0,
-            "y": 1,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 1,
-            "y": 1,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 2,
-            "y": 1,
-            "ground": "wasser",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 3,
-            "y": 1,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 4,
-            "y": 1,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": []
-        },{
-            "x": 0,
-            "y": 2,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 1,
-            "y": 2,
-            "ground": "wasser",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 2,
-            "y": 2,
-            "ground": "wasser",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 3,
-            "y": 2,
-            "ground": "wasser",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 4,
-            "y": 2,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": []
-        },{
-            "x": 0,
-            "y": 3,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 1,
-            "y": 3,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": [
-                {
-                    "id": 1,
-                    "pid": 1,
-                    "x": 1,
-                    "y": 3,
-                    "name": "Julian",
-                    "temperature": 20,
-                    "energy": 10,
-                    "direction": "north",
-                    "status": "good"
-                }
-            ]
-        },
-        {
-            "x": 2,
-            "y": 3,
-            "ground": "wasser",
-            "temperature": 21,
-            "roboter": []
-        },
-        {
-            "x": 3,
-            "y": 3,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": [
-                {
-                    "id": 2,
-                    "pid": 2,
-                    "x": 3,
-                    "y": 3,
-                    "name": "Felix",
-                    "temperature": 25,
-                    "energy": 80,
-                    "direction": "south",
-                    "status": "very good"
-                }
-            ]
-        },
-        {
-            "x": 4,
-            "y": 3,
-            "ground": "start",
-            "temperature": 21,
-            "roboter": []
-        },{
-            "x": 0,
-            "y": 4,
-            "ground": "",
-            "temperature": 22,
-            "roboter": []
-        },
-        {
-            "x": 1,
-            "y": 4,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": [],
-        },
-        {
-            "x": 2,
-            "y": 4,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": [
-                {
-                    "id": 2,
-                    "pid": 2,
-                    "x": 2,
-                    "y": 4,
-                    "name": "Frank",
-                    "temperature": 25,
-                    "energy": 80,
-                    "direction": "east",
-                    "status": "very good"
-                }
-            ]
-        },
-        {
-            "x": 3,
-            "y": 4,
-            "ground": "sand",
-            "temperature": 21,
-            "roboter": [],
-        },
-        {
-            "x": 4,
-            "y": 4,
-            "ground": "",
-            "temperature": 21,
-            "roboter": [],
-        }
-    ]
-}
-
-//let planet, planet1, planet2;
-
-//let raycaster = new THREE.Raycaster();
-//let mouse = new THREE.Vector2()
-let mixer;
+let mixer, twoD = false;
 
 
 
@@ -279,9 +45,9 @@ async function main() {
     scene.add(camera);
 
     //Json aufrufen
-        planeten = await apiRequestPlaneten();
-        console.log(planeten);
-        planet = await apiRequestPlanetenDetails(planeten[0].id);
+    planeten = await apiRequestPlaneten();
+    console.log(planeten);
+    planet = await apiRequestPlanetenDetails(planeten[0].id);
 
 
     for(let i = 0; i > 10; i++){
@@ -300,10 +66,10 @@ async function main() {
                 clearall(elemente);
             }
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet);
+            fillStats(planet, twoD);
             addLight();
             openPlanet(roundArray, textureLoader, planet);
-            addGrid(planetWidth, planetHeight, step);
+            addGrid(planetWidth, planetHeight, step, twoD);
         }else if(planetenNavi < 0){
             planetenNavi = planeten.length - 1;
             for (let i = 0; i < 10; i++){
@@ -311,20 +77,20 @@ async function main() {
                 clearall(elemente);
             }
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet);
+            fillStats(planet, twoD);
             addLight();
             openPlanet(roundArray, textureLoader, planet);
-            addGrid(planetWidth, planetHeight, step);
+            addGrid(planetWidth, planetHeight, step, twoD);
         }else if(planetenNavi === 0){
             for (let i = 0; i < 10; i++){
                 let elemente = document.getElementsByClassName('robotStatsBox');
                 clearall(elemente);
             }
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet);
+            fillStats(planet, twoD);
             addLight();
             openPlanet(roundArray, textureLoader, planet);
-            addGrid(planetWidth, planetHeight, step);
+            addGrid(planetWidth, planetHeight, step, twoD);
         }
     };
 
@@ -336,10 +102,10 @@ async function main() {
                 clearall(elemente);
             }
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet);
+            fillStats(planet, twoD);
             addLight();
             openPlanet(roundArray, textureLoader, planet);
-            addGrid(planetWidth, planetHeight, step);
+            addGrid(planetWidth, planetHeight, step, twoD);
         }else if(planetenNavi === 9){
             planetenNavi = 0;
             for (let i = 0; i < 10; i++){
@@ -347,81 +113,41 @@ async function main() {
                 clearall(elemente);
             }
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet);
+            fillStats(planet, twoD);
             addLight();
             openPlanet(roundArray, textureLoader, planet);
-            addGrid(planetWidth, planetHeight, step);
+            addGrid(planetWidth, planetHeight, step, twoD);
         }
     };
-
-    //Restapi auf Updates prüfen
-/*    while(running){
-        setTimeout(async function () {
-            console.log('Hallo')
-            let planeten1 = await apiRequestPlaneten();
-            let planet1 = await apiRequestPlanetenDetails(planeten[0].id);
-            if(planeten1 !== planeten){
-                planeten = planeten1;
-            }
-            if(planet1 !== planet){
-                planet = planet1;
-                planetHeight = planet.planet.height;
-                planetWidth = planet.planet.width;
-
-                fillStats(planet);
-                addLight();
-                openPlanet(roundArray, textureLoader, planet);
-                addGrid(planetWidth, planetHeight, step);
-            }
-        }, 4000);
-    }
-*/
-
-    // readJSON("/api/v1/planeten")
-    //     .then(data => {
-    //         console.log(data);
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //     });
-
-
-   // addMenu();
 
     //Planet zuordnen
     planetHeight = planet.planet.height;
     planetWidth = planet.planet.width;
 
-    fillStats(planet);
+    fillStats(planet, twoD);
     addLight();
     openPlanet(roundArray, textureLoader, planet);
-    addGrid(planetWidth, planetHeight, step);
+    addGrid(planetWidth, planetHeight, step, twoD);
+
 
     scene.background = textureLoader.load('space.png');
     //Zum testen Orbit controll
     // const orbit = new OrbitControls(camera, renderer.domElement);
     // orbit.update();
 
-
-    // let intersects = raycaster.intersectObject(scene, true);
-    //
-    // if (intersects.length > 0) {
-    //
-    //     let object = intersects[0].object;
-    //
-    //     object.material.color.set( Math.random() * 0xffffff );
-    //
-    // }
-
-    function animate() {
+    // Render PlanetMap etc..
+    async function animate() {
         //Spiel Rendern
         renderer.render(scene, camera);
-        if(mixer){
-            mixer.update(1 / 60);
-        }
+
+        // call api every frame to get an update
+        await checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi)
+
     }
 
+
     renderer.setAnimationLoop(animate);
+    // Clearall test
 }
 
 
@@ -460,7 +186,7 @@ async function main() {
 //     console.log(jsonFile);
 //     return jsonFile;
 // }
-function fillStats(planet){
+function fillStats(planet, twoD){
     let planetName = planet.planet.name;
     for (let x = 0; x < stats.length; x++) {
         stats[x].style.visibility = "visible";
@@ -474,19 +200,19 @@ function fillStats(planet){
 
 
     for(let i = 0; i < planet.planetFields.length; i++) {
-         if(tempMax < planet.planetFields[i].temperature){
-                tempMax = planet.planetFields[i].temperature;
-         }
+        if(tempMax < planet.planetFields[i].temperature){
+            tempMax = planet.planetFields[i].temperature;
+        }
 
-         tempAvg += planet.planetFields[i].temperature;
+        tempAvg += planet.planetFields[i].temperature;
 
-         if(planet.planetFields.length - i === 1){
-             tempAvg = tempAvg / planet.planetFields.length;
-         }
+        if(planet.planetFields.length - i === 1){
+            tempAvg = tempAvg / planet.planetFields.length;
+        }
 
-         if(i === 0 || tempMin > planet.planetFields[i].temperature){
-             tempMin = planet.planetFields[i].temperature;
-         }
+        if(i === 0 || tempMin > planet.planetFields[i].temperature){
+            tempMin = planet.planetFields[i].temperature;
+        }
 
         for(let x = 0; x <  planet.planetFields[i].roboter.length; x++){
             robotNumb += 1;
@@ -599,9 +325,23 @@ function fillStats(planet){
         }
     }
 
-    document.getElementById('tempMax').innerHTML = tempMax?.toFixed(2);;
-    document.getElementById(('tempAvg')).innerHTML = tempAvg?.toFixed(2);;
-    document.getElementById(('tempMin')).innerHTML = tempMin?.toFixed(2);;
+    if(tempMax){
+        document.getElementById('tempMax').innerHTML = tempMax.toFixed(2);
+    }else{
+        document.getElementById('tempMax').innerHTML = 0;
+    }
+
+    if(tempAvg){
+        document.getElementById(('tempAvg')).innerHTML = tempAvg.toFixed(2);
+    }else{
+        document.getElementById(('tempAvg')).innerHTML = 0;
+    }
+
+    if(tempMin){
+        document.getElementById(('tempMin')).innerHTML = tempMin.toFixed(2);
+    }else{
+        document.getElementById(('tempMin')).innerHTML = 0;
+    }
     document.getElementById(('robotNumb')).innerHTML = robotNumb;
 }
 
@@ -632,7 +372,7 @@ function loadGlb(x, y, direction, crashed) {
                 mesh.rotation.set(1.5, -1.5, 0);
             }
             mesh.scale.set(0.3, 0.3, 0.3);
-                mesh.position.set(x + 0.5,-y - 0.5, 0);
+            mesh.position.set(x + 0.5,-y - 0.5, 0);
         });
 }
 
@@ -667,7 +407,7 @@ function openPlanet( groundArray, textureLoader, planet) {
 }
 
 
-function addGrid(planetWidth, planetHeight, step){
+function addGrid(planetWidth, planetHeight, step, twoD){
     camera.position.set(planetWidth / 2, -planetHeight * 2, (planetHeight + planetWidth) / 2);
     camera.rotation.set(1,0,0);
     //camera.position.set(planetWidth / 2, -planetHeight / 1.5, (planetHeight + planetWidth) / 2);
@@ -723,20 +463,20 @@ function apiRequestPlaneten() {
         let xhr = new XMLHttpRequest();
         xhr.onload = function () {
 
-        if (this.readyState === 4) {
-            if (this.status === 200) {
-                try {
-                    resolve(JSON.parse(xhr.responseText));
-                } catch (e) {
-                    console.error("Fehler beim Parsen der JSON-Antwort:", e);
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    try {
+                        resolve(JSON.parse(xhr.responseText));
+                    } catch (e) {
+                        console.error("Fehler beim Parsen der JSON-Antwort:", e);
+                    }
+                } else {
+                    console.error("Fehler beim Abrufen der Daten. Statuscode:", this.status);
                 }
-            } else {
-                console.error("Fehler beim Abrufen der Daten. Statuscode:", this.status);
             }
-        }
-    };
-    xhr.open("GET", "http://localhost:12345/api/v1/planeten");
-    xhr.send()
+        };
+        xhr.open("GET", "http://localhost:12345/api/v1/planeten");
+        xhr.send()
     });
 }
 
@@ -762,7 +502,7 @@ function apiRequestPlanetenDetails(planetenId) {
     });
 }
 
-
+// Clear the hole screen
 function clearall(elemente) {
     for (let i = scene.children.length - 1; i >= 0; i--) {
         let obj = scene.children[i];
@@ -779,4 +519,39 @@ function clearall(elemente) {
 
     document.getElementById('planetName').style.visibility= 'hidden';
 
+}
+
+// Just clear the planetMap
+function clearallWithOutElements() {
+    for (let i = scene.children.length; i >= 0; i--) {
+        let obj = scene.children[i];
+        scene.remove(obj);
+    }
+}
+
+
+
+
+//Check if Api is updateted
+async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi) {
+    let planeten1 = await apiRequestPlaneten();
+    let planet1 = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
+    if (JSON.stringify(planeten1) !== JSON.stringify(planeten)) {
+        planeten = planeten1;
+    }
+    if (JSON.stringify(planet1) !== JSON.stringify(planet)) {
+        planet = planet1;
+        planetHeight = planet.planet.height;
+        planetWidth = planet.planet.width;
+
+        for (let i = 0; i < 10; i++){
+            let elemente = document.getElementsByClassName('robotStatsBox');
+            clearall(elemente);
+        }
+        fillStats(planet, twoD);
+        addLight();
+        openPlanet(roundArray, textureLoader, planet);
+        addGrid(planetWidth, planetHeight, step, twoD);
+    }
+    //clearallWithOutElements()
 }
