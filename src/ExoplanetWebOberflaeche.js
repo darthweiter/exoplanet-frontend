@@ -5,7 +5,7 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {element, func} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
 import * as events from "events";
 import {publishReplay} from "rxjs";
-import {PlaneGeometry} from "three";
+import {PlaneGeometry, TextGeometry} from "three";
 
 let camera, renderer, scene, jsonFile, mesh, data, databool = false;
 let stats = document.getElementsByClassName('statsBox');
@@ -57,7 +57,7 @@ async function main() {
         }
         fillStats(planet);
         addLight();
-        openPlanet(roundArray, textureLoader, planet, colorGrid);
+        openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
         addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
     }
 
@@ -69,7 +69,7 @@ async function main() {
         }
         fillStats(planet);
         addLight();
-        openPlanet(roundArray, textureLoader, planet, colorGrid);
+        openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
         addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
     }
 
@@ -84,7 +84,7 @@ async function main() {
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
             fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
             addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
         }else if(planetenNavi < 0){
             planetenNavi = planeten.length - 1;
@@ -96,7 +96,7 @@ async function main() {
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
             fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
             planetHeight = planet.planet.height;
             planetWidth = planet.planet.width;
             addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
@@ -109,7 +109,7 @@ async function main() {
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
             fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
             planetHeight = planet.planet.height;
             planetWidth = planet.planet.width;
             addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
@@ -127,7 +127,7 @@ async function main() {
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
             fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
             planetHeight = planet.planet.height;
             planetWidth = planet.planet.width;
             addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
@@ -141,7 +141,7 @@ async function main() {
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
             fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
             planetHeight = planet.planet.height;
             planetWidth = planet.planet.width;
             addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
@@ -155,7 +155,7 @@ async function main() {
 
     fillStats(planet);
     addLight();
-    openPlanet(roundArray, textureLoader, planet, colorGrid);
+    openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
     addGrid(planetWidth, planetHeight, step, twoD), colorGrid;
 
 
@@ -188,6 +188,7 @@ async function main() {
 
 function fillStats(planet){
     let planetName = planet.planet.name;
+    let scannedFields = 0;
     for (let x = 0; x < stats.length; x++) {
         stats[x].style.visibility = "visible";
     }
@@ -212,6 +213,11 @@ function fillStats(planet){
 
         if(i === 0 || tempMin > planet.planetFields[i].temperature){
             tempMin = planet.planetFields[i].temperature;
+        }
+
+        if(planet.planetFields[1].ground === ""){
+        }else{
+            scannedFields += 1;
         }
 
         for(let x = 0; x <  planet.planetFields[i].roboter.length; x++){
@@ -344,7 +350,7 @@ function fillStats(planet){
     document.getElementById(('robotNumb')).innerHTML = robotNumb;
 
     document.getElementById(('fields')).innerHTML = planet.planet.height * planet.planet.width;
-    document.getElementById(('fieldScan')).innerHTML = planet.planetFields.length;
+    document.getElementById(('fieldScan')).innerHTML = scannedFields;
 }
 
 
@@ -414,13 +420,31 @@ function addLight() {
 }
 
 
-function openPlanet( groundArray, textureLoader, planet, colorGrid) {
-    let groundColor
+function openPlanet( groundArray, textureLoader, planet, colorGrid, twoD) {
     if(colorGrid){
         for (let i = 0; i < planet.planetFields.length; i++) {
             if (planet.planetFields[i].x > planet.planet.width || planet.planetFields[i].y > planet.planet.height || planet.planetFields[i].x < 0 || planet.planetFields[i].y < 0) {
             } else {
-                let groundpng = new THREE.MeshBasicMaterial();
+               /* if(twoD){
+                    const loader = new FontLoader();
+
+                    loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+
+                        const tempText = new TextGeometry( 'Temperatur: ' + planet.planetFields[i].temperature, {
+                            font: font,
+                            size: 80,
+                            height: 5,
+                            curveSegments: 12,
+                            bevelEnabled: true,
+                            bevelThickness: 10,
+                            bevelSize: 8,
+                            bevelOffset: 0,
+                            bevelSegments: 5
+                        } );
+                    } );
+
+                    scene.add(tempText);
+                } */
                 const ground = new THREE.Mesh(
                     new THREE.PlaneGeometry(1, 1),
                     new THREE.MeshBasicMaterial({
@@ -598,7 +622,7 @@ async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, te
         }
         fillStats(planet);
         addLight();
-        openPlanet(roundArray, textureLoader, planet, colorGrid);
+        openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
         addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
     }
     //clearallWithOutElements();
