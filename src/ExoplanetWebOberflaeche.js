@@ -442,7 +442,7 @@ function openPlanet( groundArray, textureLoader, planet, colorGrid) {
                 }else if(planet.planetFields[i].ground === "MORAST") {
                     ground.material.color.setHex( 0x8b4513 );
                 }else {
-                    ground.material.color.setHex( 0xfff );
+                    ground.material.color.setHex( 0xffffafa );
                     }
 
                 ground.position.set(planet.planetFields[i].x + 0.5 , -planet.planetFields[i].y - 0.5);
@@ -473,15 +473,15 @@ function openPlanet( groundArray, textureLoader, planet, colorGrid) {
 
 
 function addGrid(planetWidth, planetHeight, step, twoD){
+    let material;
     if(twoD){
         camera.position.set(planetWidth / 2, -planetHeight / 2, (planetHeight + planetWidth) / 1.5);
+        material = new THREE.LineBasicMaterial({color: 'black'});
     }else{
         camera.position.set(planetWidth / 2, -planetHeight * 2, (planetHeight + planetWidth) / 2);
         camera.rotation.set(1,0,0);
+        material = new THREE.LineBasicMaterial({color: 'white'});
     }
-    //camera.position.set(planetWidth / 2, -planetHeight / 1.5, (planetHeight + planetWidth) / 2);
-    let material = new THREE.LineBasicMaterial({color: 'white'});
-
 
     let geometry = new THREE.BufferGeometry();
     const points = []
