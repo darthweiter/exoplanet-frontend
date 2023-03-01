@@ -170,7 +170,7 @@ async function main() {
     // Render PlanetMap etc..
     async function animate() {
         //Spiel Rendern
-        renderer.render(scene, camera);s
+        renderer.render(scene, camera);
     }
 
 
@@ -584,6 +584,8 @@ async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, te
     }
     if (JSON.stringify(planet1) !== JSON.stringify(planet)) {
         planet = structuredClone(planet1);
+        console.log(plant)
+        console.log(plant1)
         planetHeight = planet.planet.height;
         planetWidth = planet.planet.width;
 
