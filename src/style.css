@@ -202,3 +202,48 @@ body{
 .triangleLeft:active{
     color: black;
 }
+
+
+.twoDToggle{
+    position: absolute;
+    font-size: 30px;
+    color: #fefefe;
+    top: 30%;
+    left: 2.5%;
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+    border: 1px solid #fefefe;
+    text-shadow: 0 0 0 transparent;
+    visibility: hidden;
+}
+
+.gridColorToggle{
+    position: absolute;
+    font-size: 30px;
+    color: #fefefe;
+    top: 35%;
+    left: 2.5%;
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+    border: 1px solid #fefefe;
+    text-shadow: 0 0 0 transparent;
+    visibility: hidden;
+}
+
+.twoDToggle:hover{
+    background-color: burlywood;
+    border: 2px solid black;
+}
+
+.gridColorToggle:hover{
+    background-color: burlywood;
+    border: 2px solid black;
+}
+
+.twoDToggle:active{
+    color: black;
+}
+
+.gridColorToggle:active{
+    color: black;
+}

@@ -5,25 +5,25 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {element, func} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
 import * as events from "events";
 import {publishReplay} from "rxjs";
+import {PlaneGeometry} from "three";
 
 let camera, renderer, scene, jsonFile, mesh, data, databool = false;
 let stats = document.getElementsByClassName('statsBox');
-let mixer, twoD = false;
-
-
 
 document.getElementById("startButton").onclick = function() {
     document.getElementById('startMenu').style.visibility = 'hidden';
     document.getElementById("triangleLeft").style.visibility = "visible";
     document.getElementById("triangleRight").style.visibility = "visible";
+    document.getElementById("twoToggle").style.visibility = "visible";
+    document.getElementById("gridColorToggle").style.visibility = "visible";
     main();
 };
 
 async function main() {
+    let twoD = true, colorGrid = false;
     let planetenNavi = 0;
-    let running = true;
     const windowWith = window.innerWidth, windowHeight = window.innerHeight;
-    let planetWidth = 0, planetHeight = 0, x = 0, y = 0, groundpng, roundArray, planeten, planet;
+    let planetWidth = 0, planetHeight = 0, roundArray, planeten, planet;
     const step = 1;
 
     const textureLoader = new THREE.TextureLoader();
@@ -46,15 +46,31 @@ async function main() {
 
     //Json aufrufen
     planeten = await apiRequestPlaneten();
-    console.log(planeten);
     planet = await apiRequestPlanetenDetails(planeten[0].id);
 
 
-    for(let i = 0; i > 10; i++){
-        console.log(databool)
-        if(databool){
-            console.log(data);
+    document.getElementById("twoToggle").onclick = function() {
+        twoD = !twoD;
+        for (let i = 0; i < 10; i++){
+            let elemente = document.getElementsByClassName('robotStatsBox');
+            clearall(elemente);
         }
+        fillStats(planet);
+        addLight();
+        openPlanet(roundArray, textureLoader, planet, colorGrid);
+        addGrid(planetWidth, planetHeight, step, twoD);
+    }
+
+    document.getElementById("gridColorToggle").onclick = function() {
+        colorGrid = !colorGrid;
+        for (let i = 0; i < 10; i++){
+            let elemente = document.getElementsByClassName('robotStatsBox');
+            clearall(elemente);
+        }
+        fillStats(planet);
+        addLight();
+        openPlanet(roundArray, textureLoader, planet, colorGrid);
+        addGrid(planetWidth, planetHeight, step, twoD);
     }
 
 
@@ -66,9 +82,9 @@ async function main() {
                 clearall(elemente);
             }
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet, twoD);
+            fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet);
+            openPlanet(roundArray, textureLoader, planet, colorGrid);
             addGrid(planetWidth, planetHeight, step, twoD);
         }else if(planetenNavi < 0){
             planetenNavi = planeten.length - 1;
@@ -76,20 +92,26 @@ async function main() {
                 let elemente = document.getElementsByClassName('robotStatsBox');
                 clearall(elemente);
             }
+            //Planet zuordnen
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet, twoD);
+            fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet);
+            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            planetHeight = planet.planet.height;
+            planetWidth = planet.planet.width;
             addGrid(planetWidth, planetHeight, step, twoD);
         }else if(planetenNavi === 0){
             for (let i = 0; i < 10; i++){
                 let elemente = document.getElementsByClassName('robotStatsBox');
                 clearall(elemente);
             }
+            //Planet zuordnen
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet, twoD);
+            fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet);
+            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            planetHeight = planet.planet.height;
+            planetWidth = planet.planet.width;
             addGrid(planetWidth, planetHeight, step, twoD);
         }
     };
@@ -101,10 +123,13 @@ async function main() {
                 let elemente = document.getElementsByClassName('robotStatsBox');
                 clearall(elemente);
             }
+            //Planet zuordnen
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet, twoD);
+            fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet);
+            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            planetHeight = planet.planet.height;
+            planetWidth = planet.planet.width;
             addGrid(planetWidth, planetHeight, step, twoD);
         }else if(planetenNavi === 9){
             planetenNavi = 0;
@@ -112,36 +137,40 @@ async function main() {
                 let elemente = document.getElementsByClassName('robotStatsBox');
                 clearall(elemente);
             }
+            //Planet zuordnen
             planet = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
-            fillStats(planet, twoD);
+            fillStats(planet);
             addLight();
-            openPlanet(roundArray, textureLoader, planet);
+            openPlanet(roundArray, textureLoader, planet, colorGrid);
+            planetHeight = planet.planet.height;
+            planetWidth = planet.planet.width;
             addGrid(planetWidth, planetHeight, step, twoD);
         }
     };
+
 
     //Planet zuordnen
     planetHeight = planet.planet.height;
     planetWidth = planet.planet.width;
 
-    fillStats(planet, twoD);
+    fillStats(planet);
     addLight();
-    openPlanet(roundArray, textureLoader, planet);
+    openPlanet(roundArray, textureLoader, planet, colorGrid);
     addGrid(planetWidth, planetHeight, step, twoD);
 
 
     scene.background = textureLoader.load('space.png');
     //Zum testen Orbit controll
-    // const orbit = new OrbitControls(camera, renderer.domElement);
-    // orbit.update();
+    //const orbit = new OrbitControls(camera, renderer.domElement);
+    //orbit.update();
 
     // call api every 5 second to get an update
-    setInterval(async function() {await checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi); }, 5000);
+    setInterval(async function() {await checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi, twoD, colorGrid); }, 5000);
 
     // Render PlanetMap etc..
     async function animate() {
         //Spiel Rendern
-        renderer.render(scene, camera);
+        renderer.render(scene, camera);s
     }
 
 
@@ -157,35 +186,7 @@ async function main() {
 // })
 
 
-// function readJSON(file) {
-//     return new Promise((resolve, reject) => {
-//         const xhr = new XMLHttpRequest();
-//         xhr.open("GET", file);
-//         xhr.onreadystatechange = () => {
-//             if (xhr.readyState === 4) {
-//                 if (xhr.status === 200) {
-//                     resolve(JSON.parse(xhr.responseText));
-//                 } else {
-//                     reject(xhr.statusText);
-//                 }
-//             }
-//         };
-//         xhr.send();
-//     });
-// }
-
-
-// async function loadJson(file){
-//     await fetch(file).then(function (response) {
-//         return response.json();
-//     })
-//         .then(function (data) {
-//             jsonFile =  data;
-//     });
-//     console.log(jsonFile);
-//     return jsonFile;
-// }
-function fillStats(planet, twoD){
+function fillStats(planet){
     let planetName = planet.planet.name;
     for (let x = 0; x < stats.length; x++) {
         stats[x].style.visibility = "visible";
@@ -351,30 +352,58 @@ function fillStats(planet, twoD){
 function loadGlb(x, y, direction, crashed) {
     const loader = new GLTFLoader();
 
-    loader.load(
-        'RobotExpressive.glb',
-        (gltf) => {
-            mesh = gltf.scene;
-            mesh.traverse(function (child) {
-                if(child.type === 'Mesh') {
-                    let m = child;
-                    m.castShadow = true;
-                    m.frustumCulled = false;
+    if(crashed){
+        loader.load(
+            'trash_bag.glb',
+            (gltf) => {
+                mesh = gltf.scene;
+                mesh.traverse(function (child) {
+                    if (child.type === 'Mesh') {
+                        let m = child;
+                        m.castShadow = true;
+                        m.frustumCulled = false;
+                    }
+                    scene.add(mesh);
+                });
+                if (direction === "SOUTH") {
+                    mesh.rotation.set(1.5, 0, 0);
+                } else if (direction === "NORTH") {
+                    mesh.rotation.set(1.5, 3.1, 0);
+                } else if (direction === "EAST") {
+                    mesh.rotation.set(1.5, 1.5, 0);
+                } else if (direction === "WEST") {
+                    mesh.rotation.set(1.5, -1.5, 0);
                 }
-                scene.add(mesh);
+                mesh.scale.set(1.5,1.5,1.5);
+                mesh.position.set(x + 0.5, -y - 0.5, 0);
             });
-            if(direction === "SOUTH"){
-                mesh.rotation.set(1.5, 0, 0);
-            }else if(direction === "NORTH"){
-                mesh.rotation.set(1.5, 3.1, 0);
-            }else if(direction === "EAST"){
-                mesh.rotation.set(1.5, 1.5, 0);
-            }else if(direction === "WEST"){
-                mesh.rotation.set(1.5, -1.5, 0);
-            }
-            mesh.scale.set(0.3, 0.3, 0.3);
-            mesh.position.set(x + 0.5,-y - 0.5, 0);
-        });
+
+    }else {
+        loader.load(
+            'RobotExpressive.glb',
+            (gltf) => {
+                mesh = gltf.scene;
+                mesh.traverse(function (child) {
+                    if (child.type === 'Mesh') {
+                        let m = child;
+                        m.castShadow = true;
+                        m.frustumCulled = false;
+                    }
+                    scene.add(mesh);
+                });
+                if (direction === "SOUTH") {
+                    mesh.rotation.set(1.5, 0, 0);
+                } else if (direction === "NORTH") {
+                    mesh.rotation.set(1.5, 3.1, 0);
+                } else if (direction === "EAST") {
+                    mesh.rotation.set(1.5, 1.5, 0);
+                } else if (direction === "WEST") {
+                    mesh.rotation.set(1.5, -1.5, 0);
+                }
+                mesh.scale.set(0.3, 0.3, 0.3);
+                mesh.position.set(x + 0.5, -y - 0.5, 0);
+            });
+    }
 }
 
 
@@ -385,23 +414,58 @@ function addLight() {
 }
 
 
-function openPlanet( groundArray, textureLoader, planet) {
-    for(let i = 0; i < planet.planetFields.length; i++) {
-        console.log()
-        if(planet.planetFields[i].x > planet.planet.width || planet.planetFields[i].y > planet.planet.height || planet.planetFields[i].x < 0 || planet.planetFields[i].y < 0){
-        }else{
-            if (planet.planetFields[i].ground === "SAND" || planet.planetFields[i].ground === "WASSER" || planet.planetFields[i].ground === "LAVA" || planet.planetFields[i].ground === "PFLANZEN" || planet.planetFields[i].ground === "GEROELL" || planet.planetFields[i].ground === "FELS" || planet.planetFields[i].ground === "MORAST") {
-                let groundpng = textureLoader.load(planet.planetFields[i].ground + ".png");
+function openPlanet( groundArray, textureLoader, planet, colorGrid) {
+    let groundColor
+    if(colorGrid){
+        for (let i = 0; i < planet.planetFields.length; i++) {
+            if (planet.planetFields[i].x > planet.planet.width || planet.planetFields[i].y > planet.planet.height || planet.planetFields[i].x < 0 || planet.planetFields[i].y < 0) {
+            } else {
+                let groundpng = new THREE.MeshBasicMaterial();
                 const ground = new THREE.Mesh(
-                    new THREE.BoxGeometry(1, 1),
+                    new THREE.PlaneGeometry(1, 1),
                     new THREE.MeshBasicMaterial({
                         side: THREE.DoubleSide,
-                        map: groundpng
                     })
                 );
-                ground.position.set(planet.planetFields[i].x + 0.5,-planet.planetFields[i].y - 0.5, -0.5);
+                if (planet.planetFields[i].ground === "SAND") {
+                    ground.material.color.setHex( 0xffff00 );
+                }else if(planet.planetFields[i].ground === "WASSER"){
+                    ground.material.color.setHex( 0x0000ff );
+                }else if(planet.planetFields[i].ground === "LAVA") {
+                    ground.material.color.setHex( 0xffa500 );
+                }else if(planet.planetFields[i].ground === "PFLANZEN") {
+                    ground.material.color.setHex( 0x00cd00 );
+                }else if(planet.planetFields[i].ground === "GEROELL") {
+                    ground.material.color.setHex( 0xbebebe );
+                }else if(planet.planetFields[i].ground === "FELS") {
+                    ground.material.color.setHex( 0x2f4f4f );
+                }else if(planet.planetFields[i].ground === "MORAST") {
+                    ground.material.color.setHex( 0x8b4513 );
+                }else {
+                    ground.material.color.setHex( 0xfff );
+                    }
+
+                ground.position.set(planet.planetFields[i].x + 0.5 , -planet.planetFields[i].y - 0.5);
                 scene.add(ground);
-                //groundArray.push(ground);
+            }
+        }
+    }else {
+        for (let i = 0; i < planet.planetFields.length; i++) {
+            if (planet.planetFields[i].x > planet.planet.width || planet.planetFields[i].y > planet.planet.height || planet.planetFields[i].x < 0 || planet.planetFields[i].y < 0) {
+            } else {
+                if (planet.planetFields[i].ground === "SAND" || planet.planetFields[i].ground === "WASSER" || planet.planetFields[i].ground === "LAVA" || planet.planetFields[i].ground === "PFLANZEN" || planet.planetFields[i].ground === "GEROELL" || planet.planetFields[i].ground === "FELS" || planet.planetFields[i].ground === "MORAST") {
+                    let groundpng = textureLoader.load(planet.planetFields[i].ground + ".png");
+                    const ground = new THREE.Mesh(
+                        new THREE.BoxGeometry(1, 1),
+                        new THREE.MeshBasicMaterial({
+                            side: THREE.DoubleSide,
+                            map: groundpng
+                        })
+                    );
+                    ground.position.set(planet.planetFields[i].x + 0.5, -planet.planetFields[i].y - 0.5, -0.5);
+                    scene.add(ground);
+                    //groundArray.push(ground);
+                }
             }
         }
     }
@@ -409,8 +473,12 @@ function openPlanet( groundArray, textureLoader, planet) {
 
 
 function addGrid(planetWidth, planetHeight, step, twoD){
-    camera.position.set(planetWidth / 2, -planetHeight * 2, (planetHeight + planetWidth) / 2);
-    camera.rotation.set(1,0,0);
+    if(twoD){
+        camera.position.set(planetWidth / 2, -planetHeight / 2, (planetHeight + planetWidth) / 1.5);
+    }else{
+        camera.position.set(planetWidth / 2, -planetHeight * 2, (planetHeight + planetWidth) / 2);
+        camera.rotation.set(1,0,0);
+    }
     //camera.position.set(planetWidth / 2, -planetHeight / 1.5, (planetHeight + planetWidth) / 2);
     let material = new THREE.LineBasicMaterial({color: 'white'});
 
@@ -431,32 +499,6 @@ function addGrid(planetWidth, planetHeight, step, twoD){
 
     var line = new THREE.LineSegments(geometry, material);
     scene.add(line);
-}
-
-
-function addMenu(domEvents){
-    camera.position.set(0, 0, 10);
-    const geometry = new THREE.SphereGeometry(1);
-    const material = new THREE.MeshBasicMaterial({wireframe: true});
-    planet = new THREE.Mesh(geometry, material)
-    scene.add(planet)
-    planet1 = new THREE.Mesh(geometry, material)
-    planet1.position.y = 4;
-    scene.add(planet1)
-    planet2 = new THREE.Mesh(geometry, material)
-    planet2.position.y = -4;
-    scene.add(planet2)
-    renderer.domElement.addEventListener("mousedown", onMouseDown => {
-        console.log('Hallo');
-    }, false);
-
-}
-
-
-function render() {
-
-    renderer.render(scene, camera);
-
 }
 
 function apiRequestPlaneten() {
@@ -534,7 +576,7 @@ function clearallWithOutElements() {
 
 
 //Check if Api is updateted
-async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi) {
+async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi, twoD, colorGrid) {
     let planeten1 = await apiRequestPlaneten();
     let planet1 = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
     if (JSON.stringify(planeten1) !== JSON.stringify(planeten)) {
@@ -549,10 +591,10 @@ async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, te
             let elemente = document.getElementsByClassName('robotStatsBox');
             clearall(elemente);
         }
-        fillStats(planet, twoD);
+        fillStats(planet);
         addLight();
-        openPlanet(roundArray, textureLoader, planet);
+        openPlanet(roundArray, textureLoader, planet, colorGrid);
         addGrid(planetWidth, planetHeight, step, twoD);
     }
-    //clearallWithOutElements()
+    //clearallWithOutElements();
 }
