@@ -58,7 +58,7 @@ async function main() {
         fillStats(planet);
         addLight();
         openPlanet(roundArray, textureLoader, planet, colorGrid);
-        addGrid(planetWidth, planetHeight, step, twoD);
+        addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
     }
 
     document.getElementById("gridColorToggle").onclick = function() {
@@ -70,7 +70,7 @@ async function main() {
         fillStats(planet);
         addLight();
         openPlanet(roundArray, textureLoader, planet, colorGrid);
-        addGrid(planetWidth, planetHeight, step, twoD);
+        addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
     }
 
 
@@ -85,7 +85,7 @@ async function main() {
             fillStats(planet);
             addLight();
             openPlanet(roundArray, textureLoader, planet, colorGrid);
-            addGrid(planetWidth, planetHeight, step, twoD);
+            addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
         }else if(planetenNavi < 0){
             planetenNavi = planeten.length - 1;
             for (let i = 0; i < 10; i++){
@@ -99,7 +99,7 @@ async function main() {
             openPlanet(roundArray, textureLoader, planet, colorGrid);
             planetHeight = planet.planet.height;
             planetWidth = planet.planet.width;
-            addGrid(planetWidth, planetHeight, step, twoD);
+            addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
         }else if(planetenNavi === 0){
             for (let i = 0; i < 10; i++){
                 let elemente = document.getElementsByClassName('robotStatsBox');
@@ -112,7 +112,7 @@ async function main() {
             openPlanet(roundArray, textureLoader, planet, colorGrid);
             planetHeight = planet.planet.height;
             planetWidth = planet.planet.width;
-            addGrid(planetWidth, planetHeight, step, twoD);
+            addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
         }
     };
 
@@ -130,7 +130,7 @@ async function main() {
             openPlanet(roundArray, textureLoader, planet, colorGrid);
             planetHeight = planet.planet.height;
             planetWidth = planet.planet.width;
-            addGrid(planetWidth, planetHeight, step, twoD);
+            addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
         }else if(planetenNavi === 9){
             planetenNavi = 0;
             for (let i = 0; i < 10; i++){
@@ -144,7 +144,7 @@ async function main() {
             openPlanet(roundArray, textureLoader, planet, colorGrid);
             planetHeight = planet.planet.height;
             planetWidth = planet.planet.width;
-            addGrid(planetWidth, planetHeight, step, twoD);
+            addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
         }
     };
 
@@ -156,7 +156,7 @@ async function main() {
     fillStats(planet);
     addLight();
     openPlanet(roundArray, textureLoader, planet, colorGrid);
-    addGrid(planetWidth, planetHeight, step, twoD);
+    addGrid(planetWidth, planetHeight, step, twoD), colorGrid;
 
 
     scene.background = textureLoader.load('space.png');
@@ -472,14 +472,19 @@ function openPlanet( groundArray, textureLoader, planet, colorGrid) {
 }
 
 
-function addGrid(planetWidth, planetHeight, step, twoD){
+function addGrid(planetWidth, planetHeight, step, twoD, colorGrid){
     let material;
     if(twoD){
         camera.position.set(planetWidth / 2, -planetHeight / 2, (planetHeight + planetWidth) / 1.5);
-        material = new THREE.LineBasicMaterial({color: 'black'});
+
     }else{
         camera.position.set(planetWidth / 2, -planetHeight * 2, (planetHeight + planetWidth) / 2);
         camera.rotation.set(1,0,0);
+    }
+
+    if(colorGrid){
+        material = new THREE.LineBasicMaterial({color: 'black'});
+    }else{
         material = new THREE.LineBasicMaterial({color: 'white'});
     }
 
@@ -580,12 +585,10 @@ async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, te
     let planeten1 = await apiRequestPlaneten();
     let planet1 = await apiRequestPlanetenDetails(planeten[planetenNavi].id);
     if (JSON.stringify(planeten1) !== JSON.stringify(planeten)) {
-        planeten = structuredClone(planeten1);
+        planeten = JSON.parse(JSON.stringify(planet1));
     }
     if (JSON.stringify(planet1) !== JSON.stringify(planet)) {
-        planet = structuredClone(planet1);
-        console.log(plant)
-        console.log(plant1)
+        planet = JSON.parse(JSON.stringify(planet1));
         planetHeight = planet.planet.height;
         planetWidth = planet.planet.width;
 
@@ -596,7 +599,7 @@ async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, te
         fillStats(planet);
         addLight();
         openPlanet(roundArray, textureLoader, planet, colorGrid);
-        addGrid(planetWidth, planetHeight, step, twoD);
+        addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
     }
     //clearallWithOutElements();
 }
