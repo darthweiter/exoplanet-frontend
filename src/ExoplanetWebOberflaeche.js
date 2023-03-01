@@ -441,10 +441,9 @@ function openPlanet( groundArray, textureLoader, planet, colorGrid, twoD) {
                             bevelOffset: 0,
                             bevelSegments: 5
                         } );
+                        scene.add(tempText);
                     } );
-
-                    scene.add(tempText);
-                } */
+                }  */
                 const ground = new THREE.Mesh(
                     new THREE.PlaneGeometry(1, 1),
                     new THREE.MeshBasicMaterial({
