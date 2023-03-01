@@ -1,11 +1,11 @@
 import * as THREE from "three";
 import "./style.css";
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-import {element, func} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
-import * as events from "events";
-import {publishReplay} from "rxjs";
-import {PlaneGeometry, TextGeometry} from "three";
+import {FontLoader} from "three/examples/jsm/loaders/FontLoader";
+import {TextGeometry} from "three/examples/jsm/geometries/TextGeometry";
+
+
+
 
 let camera, renderer, scene, jsonFile, mesh, data, databool = false;
 let stats = document.getElementsByClassName('statsBox');
@@ -215,7 +215,7 @@ function fillStats(planet){
             tempMin = planet.planetFields[i].temperature;
         }
 
-        if(planet.planetFields[1].ground === ""){
+        if(planet.planetFields[i].ground === ""){
         }else{
             scannedFields += 1;
         }
@@ -425,25 +425,23 @@ function openPlanet( groundArray, textureLoader, planet, colorGrid, twoD) {
         for (let i = 0; i < planet.planetFields.length; i++) {
             if (planet.planetFields[i].x > planet.planet.width || planet.planetFields[i].y > planet.planet.height || planet.planetFields[i].x < 0 || planet.planetFields[i].y < 0) {
             } else {
-               /* if(twoD){
-                    const loader = new FontLoader();
-
-                    loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
-
-                        const tempText = new TextGeometry( 'Temperatur: ' + planet.planetFields[i].temperature, {
+                if(twoD){
+                    var fontLoader = new FontLoader();
+                    fontLoader.load('gentilis_bold.typeface.json', function(font) {
+                        var textGeometry = new TextGeometry('TEMP: ' + planet.planetFields[i].temperature, {
                             font: font,
-                            size: 80,
-                            height: 5,
-                            curveSegments: 12,
-                            bevelEnabled: true,
-                            bevelThickness: 10,
-                            bevelSize: 8,
-                            bevelOffset: 0,
-                            bevelSegments: 5
-                        } );
-                        scene.add(tempText);
-                    } );
-                }  */
+                            size: 0.1,
+                            height: 0.01
+                        });
+
+                        var material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+                        var mesh = new THREE.Mesh(textGeometry, material);
+
+                        mesh.position.set(planet.planetFields[i].x + 0.5, -planet.planetFields[i].y - 0.5, 0.5);
+
+                        scene.add(mesh);
+                    });
+                }
                 const ground = new THREE.Mesh(
                     new THREE.PlaneGeometry(1, 1),
                     new THREE.MeshBasicMaterial({
