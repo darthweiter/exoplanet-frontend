@@ -6,10 +6,12 @@ import {TextGeometry} from "three/examples/jsm/geometries/TextGeometry";
 
 
 
-
+//Variables needed vor all Functions
 let camera, renderer, scene, jsonFile, mesh, data, databool = false;
 let stats = document.getElementsByClassName('statsBox');
 
+
+// Get the Start Button by Id
 document.getElementById("startButton").onclick = function() {
     document.getElementById('startMenu').style.visibility = 'hidden';
     document.getElementById("triangleLeft").style.visibility = "visible";
@@ -19,12 +21,17 @@ document.getElementById("startButton").onclick = function() {
     main();
 };
 
+
+// Main Function
 async function main() {
+
+    // Variables for the main Function
     let twoD = true, colorGrid = false;
     let planetenNavi = 0;
     const windowWith = window.innerWidth, windowHeight = window.innerHeight;
     let planetWidth = 0, planetHeight = 0, roundArray, planeten, planet;
     const step = 1;
+
 
     const textureLoader = new THREE.TextureLoader();
 
@@ -175,17 +182,9 @@ async function main() {
 
 
     renderer.setAnimationLoop(animate);
-    // Clearall test
 }
 
-
-// window.addEventListener('resize',function () {
-//     camera.aspect = window.innerWidth / window.innerHeight;
-//     camera.updateProjectionMatrix();
-//     renderer.setSize(window.innerWidth, window.innerHeight);
-// })
-
-
+//Fill all stats with the json and add it to the screen
 function fillStats(planet){
     let planetName = planet.planet.name;
     let scannedFields = 0;
@@ -219,14 +218,12 @@ function fillStats(planet){
         }else{
             scannedFields += 1;
         }
-
-        for(let x = 0; x <  planet.planetFields[i].roboter.length; x++){
+        //Generate Html automatic for roboter div
+        for(let x = 0; x < planet.planetFields[i].roboter.length; x++){
             robotNumb += 1;
-            // Erstelle das äußere div-Element mit der Klasse "robotStatsBox"
             const robotStatsBox = document.createElement("div");
             robotStatsBox.classList.add("robotStatsBox");
 
-            // Erstelle das div-Element mit der Klasse "robotName" und setze den Text auf den Roboter-Namen
             const robotName = document.createElement("div");
             robotName.classList.add("robotName");
             robotName.textContent = planet.planetFields[i].roboter[x].name;
@@ -354,7 +351,7 @@ function fillStats(planet){
 }
 
 
-
+// Load Roboter Glb
 function loadGlb(x, y, direction, crashed) {
     const loader = new GLTFLoader();
 
@@ -412,7 +409,7 @@ function loadGlb(x, y, direction, crashed) {
     }
 }
 
-
+// Add light for the Roboter glb
 function addLight() {
     let light = new THREE.DirectionalLight(0xFFFFFF, 4.0);
     light.position.set(0, 0, 100);
@@ -420,6 +417,7 @@ function addLight() {
 }
 
 
+// Add ground to grid
 function openPlanet( groundArray, textureLoader, planet, colorGrid, twoD) {
     if(colorGrid){
         for (let i = 0; i < planet.planetFields.length; i++) {
@@ -492,7 +490,7 @@ function openPlanet( groundArray, textureLoader, planet, colorGrid, twoD) {
     }
 }
 
-
+// Make the grid and add it to Three.js
 function addGrid(planetWidth, planetHeight, step, twoD, colorGrid){
     let material;
     if(twoD){
@@ -527,6 +525,8 @@ function addGrid(planetWidth, planetHeight, step, twoD, colorGrid){
     scene.add(line);
 }
 
+
+// Send apiRequest and get an List with all Planets
 function apiRequestPlaneten() {
     return new Promise( function (resolve){
         let xhr = new XMLHttpRequest();
@@ -549,6 +549,8 @@ function apiRequestPlaneten() {
     });
 }
 
+
+// Send Api Request and get Planet details
 function apiRequestPlanetenDetails(planetenId) {
     return new Promise( function (resolve){
         let xhr = new XMLHttpRequest();
@@ -590,17 +592,6 @@ function clearall(elemente) {
 
 }
 
-// Just clear the planetMap
-function clearallWithOutElements() {
-    for (let i = scene.children.length; i >= 0; i--) {
-        let obj = scene.children[i];
-        scene.remove(obj);
-    }
-}
-
-
-
-
 //Check if Api is updateted
 async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, textureLoader, roundArray, step, planetenNavi, twoD, colorGrid) {
     let planeten1 = await apiRequestPlaneten();
@@ -622,5 +613,4 @@ async function checkForApiUpdate(planeten, planetHeight, planetWidth, planet, te
         openPlanet(roundArray, textureLoader, planet, colorGrid, twoD);
         addGrid(planetWidth, planetHeight, step, twoD, colorGrid);
     }
-    //clearallWithOutElements();
 }
